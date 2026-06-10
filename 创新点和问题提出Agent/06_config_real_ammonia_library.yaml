@@ -1,0 +1,300 @@
+# 真实合成氨文献库接入配置
+
+agent:
+  name: "创新点和问题提出Agent"
+  mode: "evidence"
+  version: "mvp-0.2-real-library"
+  language: "zh-CN"
+
+project_scope:
+  default_project_id: "real_ammonia_ru_ceo2_debug"
+  reaction: "N2 activation and NHx hydrogenation in ammonia synthesis"
+  catalyst_family: "Ru-CeO2 / ceria-supported Ru catalysts"
+  focus_keywords:
+    - "Ru/CeO2"
+    - "Ru clusters/CeO2"
+    - "Ru NPs/CeO2"
+    - "ceria"
+    - "oxygen vacancy"
+    - "Ce3+"
+    - "N2 dissociation"
+    - "NHx"
+    - "hydrogen poisoning"
+  time_range:
+    start_year: 2015
+    end_year: 2026
+  graduation_target: "B档机制论文候选；同时服务 A档Agent方法论文示范案例"
+
+search_expansion:
+  core_terms:
+    - "Ru/CeO2"
+    - "Ru-CeO2"
+    - "Ru clusters/CeO2"
+    - "Ru NPs/CeO2"
+    - "Ru supported ceria"
+    - "ceria-supported Ru"
+    - "CeO2"
+    - "ceria"
+    - "oxygen vacancy"
+    - "Ce3+"
+    - "Ce4+"
+    - "N2 activation"
+    - "N2 dissociation"
+    - "NHx hydrogenation"
+    - "ammonia synthesis"
+  mechanism_terms:
+    - "metal-support interaction"
+    - "SMSI"
+    - "interfacial site"
+    - "B5 site"
+    - "rate-determining step"
+    - "hydrogen poisoning"
+    - "reaction order"
+    - "reaction pathway"
+    - "microkinetic"
+    - "DFT"
+    - "NEB"
+  evidence_terms:
+    - "adsorption energy"
+    - "activation barrier"
+    - "Bader charge"
+    - "PDOS"
+    - "charge density difference"
+    - "oxygen vacancy concentration"
+    - "Ce3+ concentration"
+
+sources:
+  local:
+    markdown_dirs:
+      - 'D:\SaXin\Science\合成氨催化剂入库文献'
+    csv_files:
+      - 'D:\SaXin\Science\合成氨催化剂入库文献\extracted_catalysts_20260406_194023.csv'
+      - 'D:\SaXin\Science\合成氨催化剂入库文献\extracted_catalysts.csv'
+  online_metadata: []
+  optional_later:
+    - "Crossref DOI enrichment"
+    - "OpenAlex recent-work duplicate search"
+    - "Semantic Scholar citation context"
+
+source_filters:
+  include_keywords:
+    - "Ru/CeO2"
+    - "Ru clusters/CeO2"
+    - "Ru NPs/CeO2"
+    - "Ru-CeO2"
+    - "Ru supported ceria"
+    - "ceria-supported Ru"
+    - "oxygen vacancies"
+    - "oxygen vacancy"
+    - "Ce3+"
+    - "hydrogen poisoning"
+  required_keyword_groups:
+    - ["Ru", "ruthenium"]
+    - ["CeO2", "ceria", "Ce3+", "Ce4+", "oxygen vacancy"]
+  title_path_required_keyword_groups:
+    - ["Ru", "Ruthenium"]
+    - ["CeO2", "Ceria", "ceria-supported", "cerium"]
+  exclude_keywords: []
+  min_relevance_score: 0.05
+  max_sources: 160
+  max_text_sources: 120
+  max_csv_sources: 40
+  max_csv_rows: 5000
+  max_evidence_per_source: 60
+
+workflow:
+  stages:
+    - "scope_expansion"
+    - "source_harvest"
+    - "evidence_extraction"
+    - "consensus_mining"
+    - "question_generation"
+    - "critique"
+    - "dedup_ranking"
+    - "evolution"
+    - "meta_review"
+  iteration_rounds:
+    evidence: 2
+
+generation:
+  target_raw_questions: 80
+  target_final_cards: 48
+  target_recommendations: 5
+  opportunity_patterns:
+    - "consensus_without_mechanistic_closure"
+    - "literature_conflict"
+    - "oversimplified_model"
+    - "strong_experiment_weak_computation"
+    - "available_data_not_integrated"
+    - "scaling_relation_outlier"
+    - "method_gap"
+
+review:
+  hard_gates:
+    min_evidence_per_high_priority_card: 2
+    reject_if_computability: ["C0"]
+    reject_if_no_modelable_structure: true
+    reject_if_no_minimal_publishable_result_set: true
+    reject_if_recent_complete_duplicate: true
+  scoring_weights:
+    novelty_score: 0.22
+    computability_score: 0.22
+    publishability_score: 0.18
+    graduation_value_score: 0.14
+    evidence_strength_score: 0.14
+    cost_control_score: 0.10
+  thresholds:
+    strong_recommend: 85
+    recommend: 75
+    reserve: 60
+    archive_below: 60
+  topic_priority_bonus:
+    oxygen vacancy: 2.0
+    hydrogen poisoning: 1.6
+    rate-determining step: 1.6
+    metal-support interaction: 1.4
+    Ru cluster active site: 1.2
+    electronic structure: 1.0
+    reaction kinetics: 0.6
+    microkinetics: -1.0
+
+computability_prefilter:
+  labels:
+    C0: "不可纯计算回答"
+    C1: "计算只能辅助，不能构成主结论"
+    C2: "可由计算回答机制性问题"
+    C3: "可由计算形成独立论文核心"
+  acceptable_for_next_stage:
+    - "C2"
+    - "C3"
+
+protocol_registry:
+  path: "protocol_registry/protocols.yaml"
+  mode: "prebind_only"
+  required_for_recommendation: true
+
+output:
+  base_dir: "outputs"
+  files:
+    source_records: "literature/source_records.jsonl"
+    literature_matrix: "literature/literature_matrix.csv"
+    evidence_table: "literature/evidence_table.csv"
+    method_evidence: "literature/method_evidence.csv"
+    consensus_list: "insight/consensus_list.md"
+    controversy_list: "insight/controversy_list.md"
+    open_gap_list: "insight/open_gap_list.md"
+    all_question_cards: "question_cards/all_question_cards.json"
+    high_priority_cards: "question_cards/high_priority_cards.md"
+    rejected_cards: "question_cards/rejected_cards.md"
+    ranking_table: "review/ranking_table.csv"
+    meta_review: "review/meta_review.md"
+
+insight_ledger:
+  enabled: true
+  ledger_path: "outputs/insight_ledger/real_ammonia_ru_ceo2_debug_ledger.json"
+  files:
+    snapshot: "insight/insight_ledger_snapshot.json"
+    delta_json: "insight/insight_delta.json"
+    delta_report: "insight/insight_delta_report.md"
+
+manual_review_required:
+  - "核验每条证据是否来自真实论文正文而非参考文献列表"
+  - "补全 DOI、题名、年份、期刊等引用元数据"
+  - "近 5 年高度相似计算论文检索"
+  - "毕业档位和目标期刊"
+  - "纯计算可验证性最终标签"
+  - "高成本 NEB/微观动力学任务是否值得进入计算规划"
+
+api:
+  timeout_seconds: 12
+  sleep_seconds: 0.2
+  user_agent: "catalysis-question-agent/0.1 (mailto optional)"
+  mailto:
+
+source_harvest:
+  enabled: true
+  registry_path: "source_registry.yaml"
+  output_base_dir: "outputs/intelligence"
+  max_results_per_query: 30
+  from_year: 2021
+  to_year: 2026
+  min_relevance_score: 0.20
+  open_access_enrichment:
+    enabled: true
+    email_env: "UNPAYWALL_EMAIL"
+    email: ""
+  arxiv:
+    base_url: "https://export.arxiv.org/api/query"
+    timeout_seconds: 45
+    sleep_seconds: 3.5
+    max_retries: 2
+  triage:
+    enter_fulltext_queue_score: 0.45
+    focus_terms:
+      - "Ru-CeO2"
+      - "Ru/CeO2"
+      - "ruthenium ceria"
+      - "ammonia synthesis"
+      - "N2 activation"
+      - "oxygen vacancy"
+      - "Ce3+"
+      - "hydrogen poisoning"
+      - "AI for science"
+      - "machine learning"
+      - "machine learning catalysis"
+      - "machine learning potential"
+      - "interatomic potential"
+      - "heterogeneous catalysis"
+      - "large language model"
+      - "chemistry"
+      - "materials discovery"
+      - "functional materials discovery"
+  intake:
+    max_sources: 24
+    min_triage_score: 0.25
+    include_metadata_watch: true
+    decisions:
+      - "oa_fulltext_ready"
+      - "fulltext_queue"
+      - "metadata_watch"
+
+metadata_enrichment:
+  enabled: true
+  max_sources: 32
+  min_confidence: 0.55
+  source_types:
+    - "local_text"
+
+similar_work_search:
+  enabled: true
+  max_questions: 5
+  max_results_per_question: 8
+  from_year: 2021
+  to_year: 2026
+
+llm:
+  enabled: true
+  provider: "deepseek"
+  api_key: ""
+  api_key_env: "DEEPSEEK_API_KEY"
+  base_url: "https://api.deepseek.com"
+  model: "deepseek-v4-pro"
+  timeout_seconds: 120
+  max_retries: 1
+  retry_sleep_seconds: 2
+  temperature: 0.2
+  max_tokens: 4096
+  merge_mode: "prepend"  # prepend | append | replace
+  user_agent: "catalysis-question-agent/0.1"
+  thinking:
+    type: "disabled"
+    reasoning_effort: "high"
+  tasks:
+    generate_question_cards:
+      enabled: true
+      target_count: 24
+      max_tokens: 5000
+    critique_cards:
+      enabled: true
+      top_n: 8
+      max_tokens: 3500

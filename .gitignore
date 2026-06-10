@@ -1,0 +1,56 @@
+# Local secrets and credentials
+.env
+.env.*
+!.env.example
+*.local
+*.local.*
+*.secret
+*.secrets
+secrets/
+.secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+*_rsa
+*_ed25519
+
+# Python caches and build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Runtime outputs and generated artifacts
+pipeline_outputs/
+_tmp_graduation_pdf_pages/
+**/outputs/
+**/generated/
+**/llm_call_log.json
+*.log
+
+# Third-party reference clones; keep source URLs and mapping docs instead.
+external/github_scaffolds/
+
+# Review project workspace; only keep the reusable AI workflow scripts.
+合成氨综述/*
+!合成氨综述/07_AI流水线/
+!合成氨综述/07_AI流水线/**
+合成氨综述/07_AI流水线/generated/
+合成氨综述/07_AI流水线/**/__pycache__/
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
+.ipynb_checkpoints/

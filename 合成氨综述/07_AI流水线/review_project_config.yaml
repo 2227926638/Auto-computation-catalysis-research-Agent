@@ -1,0 +1,100 @@
+project:
+  name: 合成氨综述
+  root: D:\SaXin\Science\自动科研Agent\合成氨综述
+  status: topic_selection
+
+paths:
+  literature_matrix_template: 03_证据矩阵/literature_matrix_template.csv
+  evidence_table_template: 03_证据矩阵/evidence_table_template.csv
+  claims_and_gaps_template: 03_证据矩阵/claims_and_gaps_template.csv
+  literature_matrix_filled: 03_证据矩阵/literature_matrix_filled.csv
+  evidence_table_filled: 03_证据矩阵/evidence_table_filled.csv
+  claims_and_gaps_filled: 03_证据矩阵/claims_and_gaps_filled.csv
+  generated_assets: 07_AI流水线/generated
+
+existing_agent:
+  path: D:\SaXin\Science\自动科研Agent\创新点和问题提出Agent
+  candidate_output: outputs\real_ammonia_with_metadata_final
+  useful_files:
+    - literature\literature_matrix.csv
+    - literature\evidence_table.csv
+    - insight\consensus_list.md
+    - insight\controversy_list.md
+    - insight\open_gap_list.md
+    - question_cards\high_priority_cards.md
+    - review\meta_review.md
+    - metadata\similar_works.csv
+
+candidate_themes:
+  - id: active_site_debate
+    label: Ru/CeO2 active-site debate
+    keywords:
+      - B5 site
+      - Ru cluster
+      - sub-nanometer Ru
+      - Ru-Ov-Ce
+      - interfacial site
+  - id: oxygen_vacancy_emsi
+    label: Oxygen vacancies and electronic metal-support interaction
+    keywords:
+      - oxygen vacancy
+      - Ce3+
+      - Ce4+
+      - EMSI
+      - electron transfer
+  - id: hydrogen_poisoning
+    label: Hydrogen poisoning and kinetic fingerprints
+    keywords:
+      - hydrogen poisoning
+      - H2 reaction order
+      - hydrogen coverage
+      - kinetics
+      - reaction order
+  - id: computation_microkinetics
+    label: DFT and microkinetic understanding
+    keywords:
+      - DFT
+      - NEB
+      - microkinetics
+      - N2 dissociation
+      - NHx hydrogenation
+  - id: ai_evidence_map
+    label: AI-ready evidence map
+    keywords:
+      - literature matrix
+      - evidence map
+      - claim
+      - gap
+      - data framework
+
+draft_sections:
+  - id: introduction
+    title: Introduction
+  - id: ru_ceo2_rationale
+    title: Why Ru/CeO2 and rare-earth oxide supports?
+  - id: active_site_debate
+    title: Active-site debate
+  - id: oxygen_vacancy_emsi
+    title: Oxygen vacancies and metal-support interaction
+  - id: hydrogen_poisoning
+    title: Hydrogen poisoning and kinetic fingerprints
+  - id: computation_microkinetics
+    title: Computational and microkinetic understanding
+  - id: ai_evidence_map
+    title: AI-ready evidence framework
+  - id: outlook
+    title: Design principles and outlook
+
+target_journals:
+  stretch:
+    - Science Advances
+    - Nature Catalysis
+    - Nature Reviews Chemistry
+  realistic_high:
+    - Communications Chemistry
+    - Communications Materials
+    - Chinese Journal of Catalysis
+  realistic_standard:
+    - Catalysis Science & Technology
+    - ChemCatChem
+    - Catalysis Today

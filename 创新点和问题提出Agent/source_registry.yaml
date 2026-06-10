@@ -1,0 +1,147 @@
+version: 1
+entries:
+  - source_id: "openalex_ai_core"
+    name: "OpenAlex AI and AI4S core papers"
+    provider: "openalex"
+    domain: "ai"
+    tier: "S"
+    enabled: true
+    source_kind: "paper"
+    access_mode: "metadata_api"
+    evidence_level: "triage_until_fulltext"
+    content_state: "metadata_only"
+    license_state: "unknown"
+    queries:
+      - "AI for science scientific discovery"
+      - "large language model scientific discovery"
+      - "machine learning for materials discovery"
+    filters:
+      type: "article"
+    fulltext_routes:
+      - "unpaywall"
+      - "crossref_tdm_link"
+      - "open_access_pdf"
+    notes:
+      - "Use as discovery metadata before evidence extraction."
+
+  - source_id: "arxiv_ai4s_preprints"
+    name: "arXiv AI4S preprints"
+    provider: "arxiv"
+    domain: "ai4s"
+    tier: "A"
+    enabled: true
+    source_kind: "preprint"
+    access_mode: "api"
+    evidence_level: "abstract"
+    content_state: "oa_pdf"
+    license_state: "open"
+    queries:
+      - "AI for science"
+      - "machine learning catalysis"
+      - "large language model chemistry"
+    filters:
+      categories:
+        - "cs.AI"
+        - "cs.LG"
+        - "stat.ML"
+        - "cond-mat.mtrl-sci"
+        - "physics.chem-ph"
+      sortBy: "relevance"
+      sortOrder: "descending"
+    fulltext_routes:
+      - "open_access_pdf"
+    notes:
+      - "Preprints are signals, not final peer-reviewed evidence."
+
+  - source_id: "openalex_catalysis_ru_ceo2"
+    name: "OpenAlex Ru-CeO2 ammonia catalysis"
+    provider: "openalex"
+    domain: "catalysis"
+    tier: "S"
+    enabled: true
+    source_kind: "paper"
+    access_mode: "metadata_api"
+    evidence_level: "triage_until_fulltext"
+    content_state: "metadata_only"
+    license_state: "unknown"
+    queries:
+      - "Ru CeO2 ammonia synthesis N2 activation"
+      - "ruthenium ceria oxygen vacancy ammonia synthesis"
+      - "Ru supported ceria nitrogen activation DFT"
+    filters:
+      type: "article"
+    fulltext_routes:
+      - "unpaywall"
+      - "crossref_tdm_link"
+      - "local_pdf_inbox"
+      - "licensed_tdm_api"
+    notes:
+      - "Closed publisher pages are not downloaded by automation."
+
+  - source_id: "crossref_catalysis_ru_ceo2"
+    name: "Crossref Ru-CeO2 catalysis DOI metadata"
+    provider: "crossref"
+    domain: "catalysis"
+    tier: "S"
+    enabled: true
+    source_kind: "paper"
+    access_mode: "metadata_api"
+    evidence_level: "triage_until_fulltext"
+    content_state: "metadata_only"
+    license_state: "unknown"
+    queries:
+      - "Ru CeO2 ammonia synthesis"
+      - "ruthenium ceria nitrogen activation"
+      - "ceria supported ruthenium oxygen vacancy"
+    filters:
+      type: "journal-article"
+    fulltext_routes:
+      - "unpaywall"
+      - "crossref_tdm_link"
+      - "local_pdf_inbox"
+      - "licensed_tdm_api"
+    notes:
+      - "Crossref TDM links require separate access-right verification."
+
+  - source_id: "chemrxiv_catalysis_preprints"
+    name: "ChemRxiv catalysis preprints via Crossref DOI prefix"
+    provider: "chemrxiv_crossref"
+    domain: "catalysis"
+    tier: "A"
+    enabled: true
+    source_kind: "preprint"
+    access_mode: "metadata_api"
+    evidence_level: "abstract"
+    content_state: "metadata_only"
+    license_state: "unknown"
+    queries:
+      - "ammonia synthesis catalysis"
+      - "machine learning catalysis"
+      - "ruthenium ceria"
+    filters:
+      prefix: "10.26434"
+      type: "posted-content"
+    fulltext_routes:
+      - "unpaywall"
+      - "open_access_landing_page"
+    notes:
+      - "ChemRxiv preprints are ranked as signals until peer review or manual validation."
+
+  - source_id: "local_pdf_inbox"
+    name: "Manually acquired local PDF inbox"
+    provider: "local_pdf_inbox"
+    domain: "catalysis"
+    tier: "S"
+    enabled: true
+    source_kind: "paper"
+    access_mode: "local_file"
+    evidence_level: "fulltext_evidence"
+    content_state: "local_pdf"
+    license_state: "subscribed_or_manual"
+    queries: []
+    filters:
+      inbox_dir: "sources/pdf_inbox"
+    fulltext_routes:
+      - "local_pdf_inbox"
+    notes:
+      - "Use for high-value closed papers acquired through legitimate institutional access."

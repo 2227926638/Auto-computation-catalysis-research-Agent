@@ -1,0 +1,47 @@
+[project]
+name = "catalysis-question-agent"
+version = "0.1.0"
+description = "Co-Scientist-inspired innovation and research-question discovery agent for AI4Catalysis."
+requires-python = ">=3.11"
+dependencies = [
+  "pydantic>=2",
+  "PyYAML>=6",
+  "pandas>=2",
+]
+
+[project.optional-dependencies]
+provenance = [
+  "aiida-core",
+  "aiida-quantumespresso",
+  "aiida-vasp",
+  "aiida-cp2k",
+]
+materials = [
+  "pymatgen",
+  "ase",
+  "custodian",
+  "atomate2",
+  "jobflow",
+]
+literature = [
+  "paper-qa",
+]
+orchestration = [
+  "langgraph",
+]
+parsers = [
+  "cclib",
+  "qcengine",
+  "optimade",
+]
+mlip = [
+  "matgl",
+  "chgnet",
+]
+
+[project.scripts]
+catalysis-question-agent = "catalysis_question_agent.cli:main"
+catalysis-research-pipeline = "catalysis_question_agent.research_pipeline_cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
