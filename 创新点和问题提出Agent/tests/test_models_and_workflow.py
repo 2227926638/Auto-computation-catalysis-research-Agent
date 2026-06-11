@@ -179,16 +179,19 @@ class ModelsAndWorkflowTest(unittest.TestCase):
                 max_questions=2,
                 max_protocols_per_question=2,
             ).run(output_dir=tmp_path / "pipeline")
-            self.assertGreater(result.selected_question_count, 0)
-            self.assertGreater(result.task_count, 0)
-            self.assertGreater(result.claim_count, 0)
+            self.assertEqual(result.selected_question_count, 0)
+            self.assertEqual(result.task_count, 0)
+            self.assertEqual(result.claim_count, 0)
             self.assertTrue((tmp_path / "pipeline" / "audit_gate_report.md").exists())
             self.assertTrue((tmp_path / "pipeline" / "claim_ledger.json").exists())
             self.assertTrue((tmp_path / "pipeline" / "manuscript_skeleton.md").exists())
+            self.assertTrue((tmp_path / "pipeline" / "p0_audit_report.md").exists())
+            p0 = json.loads((tmp_path / "pipeline" / "p0_audit_summaries.json").read_text(encoding="utf-8"))
+            self.assertTrue(any(item["overall_status"] == "BLOCK" for item in p0))
             bindings = json.loads((tmp_path / "pipeline" / "protocol_bindings.json").read_text(encoding="utf-8"))
-            self.assertTrue(any(not item["can_generate_input"] for item in bindings))
+            self.assertEqual(bindings, [])
             tasks = json.loads((tmp_path / "pipeline" / "calculation_tasks.json").read_text(encoding="utf-8"))
-            self.assertTrue(all(item["protocol_id"] == "slab_model_construction_protocol" for item in tasks))
+            self.assertEqual(tasks, [])
             self.assertTrue((tmp_path / "pipeline" / "self_built_agent_connection_manifest.json").exists())
 
     def test_insight_ledger_uses_stable_delta_across_runs(self) -> None:

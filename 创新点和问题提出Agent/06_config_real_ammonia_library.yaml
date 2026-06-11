@@ -65,11 +65,10 @@ search_expansion:
 
 sources:
   local:
-    markdown_dirs:
-      - 'D:\SaXin\Science\合成氨催化剂入库文献'
-    csv_files:
-      - 'D:\SaXin\Science\合成氨催化剂入库文献\extracted_catalysts_20260406_194023.csv'
-      - 'D:\SaXin\Science\合成氨催化剂入库文献\extracted_catalysts.csv'
+    # Public template: keep real local literature paths in
+    # 06_config_real_ammonia_library.local.yaml, which is ignored by Git.
+    markdown_dirs: []
+    csv_files: []
   online_metadata: []
   optional_later:
     - "Crossref DOI enrichment"
@@ -273,7 +272,7 @@ similar_work_search:
   to_year: 2026
 
 llm:
-  enabled: true
+  enabled: false
   provider: "deepseek"
   api_key: ""
   api_key_env: "DEEPSEEK_API_KEY"

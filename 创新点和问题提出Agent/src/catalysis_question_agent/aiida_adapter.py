@@ -46,7 +46,16 @@ class AiiDAAdapter:
     ) -> tuple[CalculationTask, CalcResult]:
         task_uuid = str(uuid4())
         result_uuid = str(uuid4())
-        software = protocol.software[0] if protocol.software else "unresolved"
+        protocol_software = list(getattr(protocol, "software", None) or getattr(protocol, "supported_software", []) or [])
+        protocol_reference_states = list(
+            getattr(protocol, "reference_state_definition", None)
+            or getattr(protocol, "required_reference_states", [])
+            or []
+        )
+        protocol_source_files = list(getattr(protocol, "source_files", []) or [])
+        protocol_source_hashes = dict(getattr(protocol, "source_hashes", {}) or {})
+        protocol_source_scaffolds = list(getattr(protocol, "source_scaffolds", []) or [])
+        software = protocol_software[0] if protocol_software else "unresolved"
         task = CalculationTask(
             task_id=f"TASK-{run_id}-{task_index:03d}",
             question_id=card.question_id,
@@ -64,11 +73,11 @@ class AiiDAAdapter:
             input_summary={
                 "protocol_name": protocol.name,
                 "question_title": card.title,
-                "reference_states": protocol.reference_state_definition,
+                "reference_states": protocol_reference_states,
                 "audit_rules": protocol.audit_rules,
             },
-            source_files=list(dict.fromkeys(protocol.source_files + structure.source_files)),
-            source_hashes={**protocol.source_hashes, **structure.source_hashes},
+            source_files=list(dict.fromkeys(protocol_source_files + structure.source_files)),
+            source_hashes={**protocol_source_hashes, **structure.source_hashes},
         )
         result = CalcResult(
             result_id=f"RESULT-{run_id}-{task_index:03d}",
@@ -77,9 +86,9 @@ class AiiDAAdapter:
             derived_quantities={
                 "planned_only": self.is_dry_run,
                 "protocol_id": protocol.protocol_id,
-                "source_scaffolds": protocol.source_scaffolds,
+                "source_scaffolds": protocol_source_scaffolds,
             },
-            reference_state="; ".join(protocol.reference_state_definition) or None,
+            reference_state="; ".join(protocol_reference_states) or None,
             audit_status="blocked_dry_run" if self.is_dry_run else "not_audited",
             provenance_mode=task.provenance_mode,
         )

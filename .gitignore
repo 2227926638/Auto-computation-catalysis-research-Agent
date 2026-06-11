@@ -38,6 +38,28 @@ _tmp_graduation_pdf_pages/
 **/llm_call_log.json
 *.log
 
+# Local literature, private project ledgers, and large scientific artifacts
+*.pdf
+*.doc
+*.docx
+*.ppt
+*.pptx
+*.xls
+*.xlsx
+*.ris
+*.bib
+*.nbib
+*.enw
+*.sqlite
+*.sqlite3
+*.db
+*.aiida
+*.tar
+*.tar.gz
+*.zip
+*.7z
+*.rar
+
 # Third-party reference clones; keep source URLs and mapping docs instead.
 external/github_scaffolds/
 

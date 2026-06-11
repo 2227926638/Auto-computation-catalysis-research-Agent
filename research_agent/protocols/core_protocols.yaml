@@ -1,0 +1,247 @@
+version: 1
+scope: "P0 executable MVP protocol registry for auditable computational catalysis planning"
+status: "planning_stub"
+notes:
+  - "Only protocols marked executable_mvp or executable_reviewed may generate downstream calculation tasks."
+  - "All numerical defaults are project MVP guardrails; final publication claims require convergence checks and human scientific review."
+
+protocols:
+  - protocol_id: "slab_model_construction_protocol"
+    version: "0.1.0"
+    status: "executable_mvp"
+    name: "Slab model construction protocol"
+    purpose: "Build and audit periodic slab, interface, or supported-cluster models before any DFT task is created."
+    applicable_systems:
+      - "Periodic surface or oxide-supported catalyst models with explicit cell, surface orientation, and termination."
+      - "Exploratory Ru/CeO2-style interface models after source-structure provenance is recorded."
+    forbidden_uses:
+      - "Do not claim real catalyst morphology, particle-size distribution, synthesis feasibility, or long-term stability from this model alone."
+      - "Do not use final quantitative surface claims without slab-thickness, vacuum, and k-point convergence evidence."
+    supported_software:
+      - "pymatgen"
+      - "ASE"
+      - "AiiDA StructureData downstream"
+    required_inputs:
+      - "source bulk/interface structure with provenance"
+      - "surface orientation or interface construction rule"
+      - "surface termination"
+      - "slab thickness or layer count"
+      - "vacuum thickness in angstrom"
+      - "fixed-layer strategy"
+      - "charge, spin, and magnetic-moment assumptions where relevant"
+    required_reference_states:
+      - "source bulk or interface structure"
+      - "relaxed clean slab/interface model"
+      - "surface orientation and termination"
+      - "fixed-layer definition"
+    default_parameters:
+      mvp_min_vacuum_A: 15.0
+      mvp_min_atomic_layers: 4
+      require_selective_dynamics_record: true
+      require_dipole_decision_for_asymmetric_slab: true
+      require_convergence_test_for_final_claim: true
+    convergence_criteria:
+      publication_force_max_eV_per_A: 0.03
+      electronic_energy_tolerance_eV: 1.0e-5
+      note: "Exact code-specific settings must be bound by the downstream Input Audit Agent."
+    required_controls:
+      - "Record slab-thickness and vacuum convergence status before final quantitative claims."
+      - "Record whether the slab is symmetric or asymmetric and whether dipole correction is needed."
+    audit_rules:
+      - "Block if atoms overlap or chemically impossible distances are detected."
+      - "Block if vacuum is below the protocol minimum unless the task is explicitly marked exploratory."
+      - "Block if surface orientation, termination, slab thickness, or fixed atoms are absent."
+      - "Warn if no convergence evidence is available for a publication-level claim."
+    publication_boundary: "May support construction of auditable model systems. It cannot by itself prove real catalyst morphology or final catalytic performance."
+    allowed_claim_strength: "model_ready_after_G4_only"
+    notes:
+      - "CeO2 and reducible oxides require extra review of oxidation-state localization in later protocols."
+
+  - protocol_id: "adsorption_energy_protocol"
+    version: "0.1.0"
+    status: "executable_mvp"
+    name: "Adsorption energy protocol"
+    purpose: "Compute adsorption energies for explicit adsorbates on already audited slab or interface models."
+    applicable_systems:
+      - "Adsorbates on clean, defective, doped, or interface slab models that passed Structure Gate."
+      - "Mechanistic trend comparisons where all surfaces use the same functional, reference convention, and coverage definition."
+    forbidden_uses:
+      - "Do not compare adsorption energies across inconsistent coverages, cell sizes, functionals, U values, or reference conventions."
+      - "Do not claim experimental activity, selectivity, or stability from adsorption energies alone."
+      - "Do not use MLIP-only adsorption energies as final manuscript evidence without DFT validation."
+    supported_software:
+      - "AiiDA-compatible DFT engine"
+      - "pymatgen"
+      - "ASE"
+    required_inputs:
+      - "audited clean or defective slab model"
+      - "adsorbate identity and initial geometry"
+      - "adsorption site and coverage"
+      - "gas-phase or thermochemical reference definition"
+      - "adsorption-energy formula and sign convention"
+      - "consistent electronic-structure settings for slab and adsorbate-slab calculations"
+    required_reference_states:
+      - "relaxed clean or defective slab"
+      - "relaxed adsorbate-slab structure"
+      - "gas-phase N2 reference where nitrogen balance is used"
+      - "gas-phase H2 reference where hydrogen balance is used"
+      - "gas-phase NH3 or explicitly justified thermochemical reference when NHx bookkeeping requires it"
+      - "adsorption energy formula and sign convention"
+    default_parameters:
+      sign_convention: "E_ads = E(slab+adsorbate) - E(slab) - E(reference adsorbate contribution); negative is exothermic under the stated convention."
+      gas_phase_box_min_A: 15.0
+      require_same_functional_and_u: true
+      require_same_slab_cell_for_direct_comparison: true
+      require_coverage_record: true
+    convergence_criteria:
+      publication_force_max_eV_per_A: 0.03
+      electronic_energy_tolerance_eV: 1.0e-5
+      gas_phase_spin_state_must_be_recorded: true
+    required_controls:
+      - "At least one clean or reference slab calculation with identical settings."
+      - "Multiple plausible adsorption sites or a documented reason for using a single site."
+      - "Record whether relaxation changes adsorption identity, desorbs, or dissociates the adsorbate."
+    audit_rules:
+      - "Block if the slab reference and adsorbate-slab calculation use inconsistent settings."
+      - "Block if gas-phase or thermochemical reference states are missing."
+      - "Block if adsorption site, coverage, or sign convention is not recorded."
+      - "Warn if only one initial adsorption site was tested for a multi-site surface."
+      - "Warn if adsorption energy is used to imply activity without barrier or kinetic evidence."
+    publication_boundary: "May support adsorption trend and mechanistic hypotheses within the same reference convention. It cannot alone prove rate control or experimental performance."
+    allowed_claim_strength: "L2_after_G7_single_calculation_or_L3_with_controls"
+
+  - protocol_id: "oxygen_vacancy_formation_protocol"
+    version: "0.1.0"
+    status: "planning_stub"
+    purpose: "Compute and compare oxygen-vacancy formation energies."
+    applicable_systems:
+      - "Reducible oxide surfaces where vacancy site identity and oxygen chemical potential are explicit."
+    forbidden_uses:
+      - "Do not compare vacancy energies without an explicit oxygen chemical potential convention."
+    required_inputs:
+      - "relaxed pristine slab"
+      - "relaxed defective slab"
+      - "vacancy site identity"
+      - "oxygen chemical potential reference"
+    required_reference_states:
+      - "relaxed pristine slab"
+      - "relaxed defective slab with specified oxygen vacancy"
+      - "oxygen chemical potential reference"
+    audit_rules:
+      - "Vacancy site identity is explicit."
+      - "Ce3+/Ce4+ localization and spin state are checked."
+      - "Oxygen chemical potential assumption is recorded."
+
+  - protocol_id: "adsorbate_configuration_screening_protocol"
+    version: "0.1.0"
+    status: "planning_stub"
+    purpose: "Enumerate and rank candidate adsorption configurations."
+    applicable_systems:
+      - "Surfaces with multiple plausible adsorption sites."
+    forbidden_uses:
+      - "Do not publish screening ranks without DFT validation of final structures."
+    required_inputs:
+      - "site catalogue"
+      - "adsorbate definitions"
+    required_reference_states:
+      - "site catalogue"
+      - "initial and relaxed adsorbate geometries"
+    audit_rules:
+      - "Initial configurations are reproducible."
+      - "Duplicate relaxed structures are deduplicated."
+      - "Failed relaxations are recorded."
+
+  - protocol_id: "reaction_energy_path_protocol"
+    version: "0.1.0"
+    status: "planning_stub"
+    purpose: "Build reaction energy diagrams from intermediates and elementary steps."
+    applicable_systems:
+      - "Closed, stoichiometrically balanced reaction networks."
+    forbidden_uses:
+      - "Do not assign a rate-determining step from reaction energies alone if barriers are required."
+    required_inputs:
+      - "intermediate states"
+      - "stoichiometry bookkeeping"
+    required_reference_states:
+      - "all intermediate adsorption states"
+      - "gas-phase references"
+    audit_rules:
+      - "Stoichiometry and electron/proton bookkeeping are explicit."
+      - "All energies use the same reference convention."
+
+  - protocol_id: "neb_barrier_protocol"
+    version: "0.1.0"
+    status: "planning_stub"
+    purpose: "Compute decisive activation barriers by NEB or transition-state search."
+    applicable_systems:
+      - "Elementary steps with validated initial and final states."
+    forbidden_uses:
+      - "Do not use NEB paths whose endpoints are not independently relaxed."
+    required_inputs:
+      - "validated initial state"
+      - "validated final state"
+      - "image count and interpolation"
+    required_reference_states:
+      - "validated initial state"
+      - "validated final state"
+      - "NEB images or transition-state guess"
+    audit_rules:
+      - "Endpoints are separately relaxed and chemically meaningful."
+      - "Image count, spring constants, and convergence thresholds are recorded."
+
+  - protocol_id: "bader_charge_protocol"
+    version: "0.1.0"
+    status: "planning_stub"
+    purpose: "Quantify charge redistribution and oxidation-state trends."
+    applicable_systems:
+      - "Converged charge-density outputs with compatible grids."
+    forbidden_uses:
+      - "Do not use charge partitioning as standalone proof of mechanism."
+    required_inputs:
+      - "converged charge density"
+      - "relaxed geometry"
+    required_reference_states:
+      - "converged charge density"
+      - "corresponding relaxed geometry"
+    audit_rules:
+      - "Charge-density grid quality is recorded."
+      - "Charge partitioning method and version are stated."
+
+  - protocol_id: "pdos_analysis_protocol"
+    version: "0.1.0"
+    status: "planning_stub"
+    purpose: "Analyze electronic-structure changes linked to adsorption or defects."
+    applicable_systems:
+      - "Converged electronic-structure outputs with explicit projection definitions."
+    forbidden_uses:
+      - "Do not infer activity ranking from PDOS alone."
+    required_inputs:
+      - "converged wavefunction or density-of-states output"
+      - "site and orbital projection definitions"
+    required_reference_states:
+      - "converged wavefunction or density of states output"
+      - "site/orbital projection definitions"
+    audit_rules:
+      - "Energy alignment convention is stated."
+      - "Projection atoms and orbitals are explicit."
+
+  - protocol_id: "microkinetic_model_protocol"
+    version: "0.1.0"
+    status: "planning_stub"
+    purpose: "Convert computed energy/barrier sets into mechanism-level kinetic interpretation."
+    applicable_systems:
+      - "Explicit reaction networks with adsorption energies, barriers, and thermodynamic assumptions."
+    forbidden_uses:
+      - "Do not overinterpret kinetic outputs without uncertainty and sensitivity checks."
+    required_inputs:
+      - "reaction network"
+      - "adsorption energies"
+      - "activation barriers"
+      - "temperature and pressure assumptions"
+    required_reference_states:
+      - "adsorption energies"
+      - "activation barriers"
+      - "temperature and pressure assumptions"
+    audit_rules:
+      - "Rate expressions and approximations are stated."
+      - "Sensitivity or uncertainty analysis is included."
