@@ -1,6 +1,6 @@
-# 自动科研 Agent
+# Auto-computation-catalysis-research-Agent
 
-本仓库保存当前“稳定可审计计算化学科研发文 Agent / 自动化开源流程”的自有主线代码与设计文档。
+自动计算催化研究 Agent。保存当前“稳定可审计计算化学科研发文 Agent / 自动化开源流程”的自有主线代码与设计文档。
 
 ## 主要内容
 
