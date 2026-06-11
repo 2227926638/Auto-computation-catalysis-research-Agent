@@ -40,7 +40,7 @@ agents:
     role: 自动生成图表与统计表
   - name: Claim Ledger Agent
     id: claim_ledger
-    role: 结论-证据-节点账本维护
+    role: 结论-证据-节点对照表（Claim Ledger）维护
   - name: Manuscript Agent
     id: manuscript
     role: 论文草稿自动撰写
@@ -56,6 +56,6 @@ gates:
 
 deliverables:
   - 图表（能垒、吸附能、火山图等）
-  - 结论-证据账本
+  - 结论-证据对照表（Claim Ledger）
   - PPT 草稿
   - 论文草稿

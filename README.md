@@ -41,7 +41,7 @@
 
 ## 最小可交付规范（MVP）
 
-- 任一研究结论都必须可追溯到 AiiDA 节点（可复现）。
+- 任一研究结论都必须可追溯到 AiiDA 节点，并通过对应节点与参数记录实现可复现性。
 - 仅当 `Computational Feasibility Gatekeeper` 判定通过时才允许进入执行。
 - 输出至少包括：
   - 结论-证据对照表（Claim Ledger）
