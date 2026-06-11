@@ -1,0 +1,61 @@
+version: 1
+backbone: aiida_provenance
+mission: >-
+  自动检索催化共识与待解问题，筛选纯计算可验证问题，
+  并自动产出图表、PPT、论文草稿。
+
+agents:
+  - name: PI Orchestrator Agent
+    id: pi_orchestrator
+    role: 全局调度与阶段门控
+  - name: Literature Evidence Agent
+    id: literature_evidence
+    role: 文献证据检索与共识抽取
+  - name: Research Question Agent
+    id: research_question
+    role: 形成可检验研究问题
+  - name: Computational Feasibility Gatekeeper
+    id: computational_feasibility_gatekeeper
+    role: 纯计算可行性筛选闸门
+  - name: Protocol Registry Agent
+    id: protocol_registry
+    role: 注册和版本化计算协议
+  - name: Structure Model Agent
+    id: structure_model
+    role: 构建催化结构模型与输入模板
+  - name: Structure/Input/Result Audit Agent
+    id: structure_input_result_audit
+    role: 结构、输入与结果一致性审计
+  - name: AiiDA Provenance Agent
+    id: aiida_provenance
+    role: provenance 记录、绑定与追溯
+  - name: Execution Agent
+    id: execution
+    role: 任务执行与结果回收
+  - name: Error Diagnosis Agent
+    id: error_diagnosis
+    role: 失败诊断、修复与重试策略
+  - name: Figure and Table Agent
+    id: figure_table
+    role: 自动生成图表与统计表
+  - name: Claim Ledger Agent
+    id: claim_ledger
+    role: 结论-证据-节点对照表（Claim Ledger）维护
+  - name: Manuscript Agent
+    id: manuscript
+    role: 论文草稿自动撰写
+  - name: Graduation Compliance Agent
+    id: graduation_compliance
+    role: 学位/答辩材料规范化输出
+
+gates:
+  - before: execution
+    rule: 必须通过 Computational Feasibility Gatekeeper
+  - before: manuscript
+    rule: 每条 claim 必须关联 AiiDA provenance 节点
+
+deliverables:
+  - 图表（能垒、吸附能、火山图等）
+  - 结论-证据对照表（Claim Ledger）
+  - PPT 草稿
+  - 论文草稿
